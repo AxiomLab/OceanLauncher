@@ -1,0 +1,165 @@
+<link rel="stylesheet" href="sections/settings/personalization.css"/>
+
+<div class="flex flex-center flex-gap-8 settings-item">
+    <div class="icon">
+        <span class="material-symbols-outlined">palette</span>
+    </div>
+    <div class="flex flex-grow flex-col flex-justify-center">
+        <span class="name">{{settings.personalization.mainColor.title}}</span>
+        <div class="description">{{settings.personalization.mainColor.description}}</div>
+    </div>
+    <div class="color-picker" style="background: #0a73ff;">
+        <span class="material-symbols-outlined">check</span>
+    </div>
+    <div class="color-picker" style="background: #0fabef;">
+        <span class="material-symbols-outlined">check</span>
+    </div>
+    <div class="color-picker" style="background: #6303ca;">
+        <span class="material-symbols-outlined">check</span>
+    </div>
+    <div class="color-picker" style="background: #f43457;">
+        <span class="material-symbols-outlined">check</span>
+    </div>
+    <div class="color-picker" style="background: #dc7704;">
+        <span class="material-symbols-outlined">check</span>
+    </div>
+    <div class="color-picker" style="background: #1c9a40;">
+        <span class="material-symbols-outlined">check</span>
+    </div>
+    <div class="color-picker" style="background: #9c3cd6;">
+        <span class="material-symbols-outlined">check</span>
+    </div>
+    <div class="color-picker" style="background: #18a176;">
+        <span class="material-symbols-outlined">check</span>
+    </div>
+    <div class="microdot">
+        <div class="dot"></div>
+    </div>
+    <button class="color-edit">
+        <span class="material-symbols-outlined">edit</span>
+    </button>
+    <input class="color-picker custom" value="#000002" type="color"/>
+</div>
+
+<!-- Настройка dark mode -->
+<div class="flex flex-center flex-gap-8 settings-item">
+    <div class="icon">
+        <span class="material-symbols-outlined">dark_mode</span>
+    </div>
+    <div class="flex flex-grow flex-col flex-justify-center">
+        <span class="name">{{settings.personalization.darkMode.title}}</span>
+        <div class="description">{{settings.personalization.darkMode.description}}</div>
+    </div>
+    <div class="placeholder dark" data-mode="dark">
+        <div class="left"></div>
+        <div class="bottom-1"></div>
+        <div class="bottom-2"></div>
+        <div class="main"></div>
+    </div>
+    <div class="placeholder light" data-mode="light">
+        <div class="left"></div>
+        <div class="bottom-1"></div>
+        <div class="bottom-2"></div>
+        <div class="main"></div>
+    </div>
+</div>
+
+<!-- Выбор обоев -->
+<div class="flex flex-center flex-gap-8 settings-item">
+    <div class="icon">
+        <span class="material-symbols-outlined">image</span>
+    </div>
+    <div class="flex flex-grow flex-col flex-justify-center">
+        <span class="name">{{settings.personalization.background.title}}</span>
+        <div class="description">{{settings.personalization.background.description}}</div>
+    </div>
+    <img src="assets/backgrounds/min/1.webp" alt="Обои 1" data-wp="1" class="wp-item"/>
+    <img src="assets/backgrounds/min/2.webp" alt="Обои 2" data-wp="2" class="wp-item"/>
+    <img src="assets/backgrounds/min/3.webp" alt="Обои 3" data-wp="3" class="wp-item"/>
+    <img src="assets/backgrounds/min/4.webp" alt="Обои 4" data-wp="4" class="wp-item"/>
+    <img src="assets/backgrounds/min/5.webp" alt="Обои 5" data-wp="5" class="wp-item"/>
+    <div class="wp-item placeholder" data-wp="custom">
+        <span class="material-symbols-outlined">add</span>
+    </div>
+</div>
+
+<div class="flex flex-center flex-gap-8 settings-item">
+    <div class="icon">
+        <span class="material-symbols-outlined">format_size</span>
+    </div>
+    <div class="flex flex-grow flex-col flex-justify-center">
+        <span class="name">{{settings.personalization.fontFamily.title}}</span>
+    </div>
+    <select class="custom-select lighter flex-grow" id="fontFamily"></select>
+</div>
+
+<div class="flex flex-center flex-gap-8 settings-item">
+    <div class="icon">
+        <span class="material-symbols-outlined">lens_blur</span>
+    </div>
+    <div class="flex flex-grow flex-col flex-justify-center">
+        <span class="name">{{settings.personalization.disableCss.title}}</span>
+        <div class="description">{{settings.personalization.disableCss.description}}</div>
+    </div>
+    <label class="switch" data-setting="disableCssEffects">
+        <input type="checkbox">
+        <span class="inner"></span>
+    </label>
+</div>
+
+<div class="flex flex-center flex-gap-8 settings-item">
+    <div class="icon">
+        <span class="material-symbols-outlined">animation</span>
+    </div>
+    <div class="flex flex-grow flex-col flex-justify-center">
+        <span class="name">{{settings.personalization.disableAnimations.title}}</span>
+        <div class="description">{{settings.personalization.disableAnimations.description}}</div>
+    </div>
+    <label class="switch" data-setting="disableAnimations">
+        <input type="checkbox">
+        <span class="inner"></span>
+    </label>
+</div>
+
+<div class="flex flex-center flex-col flex-gap-8 settings-item">
+    <div class="flex flex-align-center flex-gap-8" style="width: 100%;">
+        <div class="icon">
+            <span class="material-symbols-outlined">translate</span>
+        </div>
+        <span class="name flex-grow">{{settings.personalization.language}}</span>
+    </div>
+    <div class="checksList" id="languages-list" style="width: 100%;">
+        <div class="item placeholder" style="display: none;" onclick="FrogTranslator.setCurrentLanguage('$4')"
+             data-lang="$4">
+            <img class="icon" src="assets/flags/$4.svg" loading="lazy"/>
+            <div class="text" style="display: flex; justify-content: center; flex-direction: column">
+                <span>$1 <sup>by $3</sup></span>
+                <span>$2</span>
+            </div>
+            <span class='check material-symbols-outlined'>check</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    var $fontSelect = $("#fontFamily");
+
+    $(function(){
+        reloadFontsSelect();
+    })
+
+    async function reloadFontsSelect() {
+        let fontsList = await FrogUI.getFontsAvailable();
+        let activeFont = await FrogThemes.loadFont();
+        $fontSelect.html("");
+        fontsList.forEach(item => {
+            $fontSelect.append(`<option${item === activeFont ? " selected" : ""}>${item}</option>`);
+        })
+    }
+
+    $fontSelect.on("change", async function(){
+        let selectedFont = $(this).val();
+        FrogConfig.write("fontFamily", selectedFont);
+        await FrogThemes.loadFont();
+    })
+</script>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ru" style="display: none">
+<head>
+    <meta charset="UTF-8"/>
+
+    <!-- Скрпиты -->
+    <script src="./js/renderer.js"></script>
+    <script src="./js/howler.min.js"></script>
+    <script src="./js/colors.js"></script>
+    <script src="./js/skinview3d.bundle.js"></script>
+
+    <script src="./js/FrogConfig.js"></script>
+
+    <!-- Cтили -->
+    <link href="./css/globals.css" rel="stylesheet">
+    <link href="./css/animate.min.css" rel="stylesheet">
+
+    <script src="./js/FrogCollector.js"></script>
+    <script src="./js/FrogTranslator.js"></script>
+    <script>FrogTranslator.loadCurrentLanguageToGlobalVariable()</script>
+
+    <script src="./js/FrogAccountsManager.js"></script>
+    <script src="./js/FrogAccountsUI.js"></script>
+    <script src="./js/FrogAlerts.js"></script>
+    <script src="./js/FrogAssets.js"></script>
+    <script src="./js/FrogAssetsParsers.js"></script>
+    <script src="./js/FrogDownloader.js"></script>
+    <script src="./js/FrogErrorsParser.js"></script>
+    <script src="./js/FrogElybyManager.js"></script>
+    <script src="./js/FrogFlyout.js"></script>
+    <script src="./js/FrogJavaManager.js"></script>
+    <script src="./js/FrogLaunchConfigurator.js"></script>
+    <script src="./js/FrogModals.js"></script>
+    <script src="./js/FrogPackManagerUI.js"></script>
+    <script src="./js/FrogModsUpdater.js"></script>
+    <script src="./js/FrogNews.js"></script>
+    <script src="./js/FrogPacks.js"></script>
+    <script src="./js/FrogPacksUI.js"></script>
+    <script src="./js/FrogPlayStats.js"></script>
+    <script src="./js/FrogRequests.js"></script>
+    <script src="./js/FrogServersUI.js"></script>
+    <script src="./js/FrogSkinsUI.js"></script>
+    <script src="./js/FrogStarter.js"></script>
+    <script src="./js/FrogTests.js"></script>
+    <script src="./js/FrogThemes.js"></script>
+    <script src="./js/FrogToasts.js"></script>
+    <script src="./js/FrogUtils.js"></script>
+    <script src="./js/FrogUI.js"></script>
+    <script src="./js/FrogUpdater.js"></script>
+    <script src="./js/FrogVersionsManager.js"></script>
+    <script src="./js/FrogVersionsUI.js"></script>
+    <script src="./js/FrogWorldsManager.js"></script>
+
+    <title>OceanLauncher</title>
+</head>
+
+<body class="global-wrapper">
+<!-- Фон -->
+<div class="background img"></div>
+
+<!-- Анимация запуска -->
+<%- include('views/startAnimation'); %>
+
+<!-- Главный контент -->
+<div class="layout hide-on-loading">
+    <!-- Заголовок окна -->
+    <%- include('views/titleWrapped'); %>
+
+    <!-- Flymenu (sidebar) -->
+    <%- include('views/flymenu'); %>
+
+    <!-- Основной контент лаунчера -->
+    <div class="content">
+        <!-- Модальные окна НАЧАЛО-->
+        <%- include('modals/settings'); %>
+        <%- include('modals/changelog'); %>
+        <%- include('modals/installMods'); %>
+        <%- include('modals/packs'); %>
+        <%- include('modals/servers'); %>
+        <%- include('modals/console'); %>
+        <%- include('modals/content'); %>
+        <!-- Модальные окна КОНЕЦ-->
+    </div>
+
+    <!-- Флайаут (нижняя панель) -->
+    <%- include('views/flyout'); %>
+</div>
+
+<!-- Оверлей для фона модальных окон -->
+<div class="modal-overlay"></div>
+
+<!-- Пул для уведомлений -->
+<div id="toasts-pool"></div>
+
+<!-- Внешние модальные окна поверх всех -->
+<%- include('modals/accounts'); %>
+<%- include('modals/versions'); %>
+<%- include('modals/elybyLogin'); %>
+<%- include('modals/frogLogin'); %>
+<%- include('modals/frogRegister'); %>
+<%- include('modals/frogSkin'); %>
+<%- include('modals/selectWorld'); %>
+<%- include('modals/packManager'); %>
+<%- include('modals/createPack'); %>
+</body>
+</html>
+<script>
+    let currentThemeData, loadedThemeData;
+    let selectedServerFromList = false;
+    $(async function () {
+        // Создание директорию для игры
+        FrogUtils.createMissingDirectories(DOT_MC_PATH);
+        global.GAME_DATA = FrogConfig.read("gameDirectory", DOT_MC_PATH);
+
+        // Начинаем запуск
+        FrogPlayStats.getAllStats();
+        FrogCollector.setupLogHijacking();
+        FrogCollector.writeLog("Launcher started at", Date.now());
+
+        // Обновления и сбор статистики
+        if (!IS_APP_IN_DEV) {
+            FrogUpdater.bindUpdate();
+            await FrogCollector.collectAndSendStats();
+        } else {
+            FrogCollector.writeLog("DEVMODE: No updated and stats");
+        }
+
+        // Инициализация темы
+        currentThemeData = FrogConfig.read("theme");
+        loadedThemeData = {};
+        FrogThemes.changeTheme(false, false);
+        FrogThemes.changeWallpaper(FrogConfig.read("currentWallpaper", "1"));
+        FrogCollector.writeLog("Theme initialized");
+
+        // Инициализация менеджера Java
+        FrogJavaManager.init();
+        FrogCollector.writeLog("JavaManager initialized");
+
+        // Настраиваем кнопку для сбора debug data
+        $(document).keyup((e) => {
+            if (e.originalEvent.code === "F12") {
+                FrogCollector.collectDebugData();
+            }
+        })
+
+        if (FrogConfig.read("language") !== "ru") {
+            global.NEWS_URL = CDN_URL + "/news_en.json";
+        } else {
+            global.NEWS_URL = CDN_URL + "/news.json";
+        }
+        global.NEWS_URL += `?_=${Date.now()}`;
+
+        if (FrogConfig.read("disableAnimations", false) === true) {
+            $("html").addClass("noAnimations");
+        }
+
+        if (FrogConfig.read("disableCssEffects", false) === true) {
+            $("html").addClass("noEffects");
+        }
+
+        if (!IS_APP_IN_DEV) {
+            // Запустить загрузочную анимацию
+            FrogUI.startLoadScreenAnimation();
+            // Показываем окно
+            $("html").addClass("animate__animated animate__fadeIn animate__fast");
+            FrogCollector.writeLog("Started animation");
+        } else {
+            // Отключить все эффекты для максимально быстрого запуска
+            $(".hide-on-loading").removeClass("hide-on-loading");
+            $(".loading-screen").hide();
+            FrogCollector.writeLog("DEVMODE: No start animation");
+        }
+
+        // Скрытие модалок по Esc
+        $(document).keydown(e => {
+            if (e.originalEvent.key === "Escape") {
+                FrogModals.hideCurrentOverlay();
+            }
+        })
+
+        // Ожидание для загрузки всех нод
+        setTimeout(() => {
+            // Переводим все ноды в DOM
+            FrogTranslator.translateAllNodes();
+            FrogTranslator.loadLanguagesList();
+
+            // Блокировка драга картинок
+            $('img').on('dragstart', function (event) {
+                event.preventDefault();
+            });
+
+            // Пасхалко
+            FrogUI.bindEasterEgg();
+
+            // Закрытие overlay modal по клику за пределы
+            $(".modal-overlay").click(function () {
+                FrogModals.hideCurrentOverlay();
+            })
+        }, 500);
+
+        // Показываем HTML
+        $("html").show();
+
+        // Загружаем список аккаунтов
+        await FrogSkinsUI.refreshAllProfiles();
+        FrogAccountsUI.reloadAccountsManager();
+        FrogAccountsUI.reloadAccountSelect();
+
+        // Загружаем список версий
+        FrogVersionsUI.loadVersions();
+
+        // Загружаем новости
+        FrogNews.loadNewsToUI();
+
+        // Загружаем сервера
+        FrogServersUI.loadList();
+
+        // Показываем modal content
+        FrogModals.showModal("content");
+
+        // Отправляем ipc о готовности лаунчера
+        ipcRenderer.send("launcher-ready");
+        FrogCollector.writeLog("IPC: Launcher ready");
+
+        // Очищаем старый кэш ассетов
+        FrogAssetsParsers.clearAssetsCache();
+
+        loadSettingsUI();
+
+        // Начинаем тестирование
+        if (IS_APP_IN_TEST) {
+            FrogCollector.writeLog("TESTMODE: Starting tests");
+            FrogFlyout.setUIStartMode(true);
+            await FrogFlyout.changeMode("spinner");
+            FrogFlyout.setText("Начинается тестирование");
+            FrogTests.startTest(0);
+        }
+    })
+</script>

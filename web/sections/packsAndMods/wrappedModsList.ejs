@@ -1,0 +1,49 @@
+<div class="packs-wrapper">
+    <!-- Список сборок -->
+    <div class="packs-list">
+        <div class="item placeholder" data-id="$6"
+             style="display: none;">
+            <img class="icon" src="$1" loading="lazy"/>
+            <span class="title">$2</span>
+            <span class="description">$3</span>
+            <div class="specs">
+                <span class="material-symbols-outlined">download</span>
+                <span class="downloads">$4</span>
+                <span class="material-symbols-outlined">favorite</span>
+                <span class="favorite">$5</span>
+            </div>
+            <div class="button">
+                <button class="primary small pill button" onclick="FrogPacksUI.loadVersionsList('$6')">
+                    {{commons.install}}
+                </button>
+                <a class="link" href="#" onclick="FrogPacksUI.openProjectURL('$6')">
+                    <span class="material-symbols-outlined">open_in_new</span>
+                    <span>{{commons.open}}</span>
+                </a>
+            </div>
+
+            <div class="versions-scroll">
+                <div id="versions-list-preloader">
+                    <div class="spinner"></div>
+                    <span class="title">{{loading.progress}}</span>
+                </div>
+                <div class="versions-list"></div>
+            </div>
+        </div>
+    </div>
+    <div class="preloader">
+        <div class="spinner small"></div>
+        <span class="title">{{loading.progress}}</span>
+    </div>
+</div>
+
+<style>
+    #versions-list-preloader {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+</style>

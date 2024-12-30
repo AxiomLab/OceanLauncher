@@ -1,0 +1,114 @@
+.background {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1000;
+}
+
+.background.img {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.background.img-1 {
+    background-image: url("../assets/backgrounds/1.webp");
+}
+
+.background.img-2 {
+    background-image: url("../assets/backgrounds/2.webp");
+}
+
+.background.img-3 {
+    background-image: url("../assets/backgrounds/3.webp");
+}
+
+.background.img-4 {
+    background-image: url("../assets/backgrounds/4.webp");
+}
+
+.background.img-5 {
+    background-image: url("../assets/backgrounds/5.webp");
+}
+
+.background::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(4px) brightness(75%);
+    pointer-events: none;
+}
+
+body > .layout {
+    display: grid;
+    height: 100%;
+    width: 100%;
+    padding: 2% 3%;
+    grid-template-columns: max-content 1fr;
+    grid-template-rows: max-content 1fr max-content;
+    gap: 24px 8px;
+    grid-auto-flow: row;
+    grid-template-areas:
+    "title-wrapper title-wrapper"
+    "flymenu content"
+    "flyout flyout";
+}
+
+body > .layout > .title-wrapper {
+    grid-area: title-wrapper;
+    display: flex;
+}
+
+body > .layout > .title-wrapper .title,
+body > .layout > .title-wrapper .title *:not(img) {
+    -webkit-app-region: drag;
+    color: white;
+}
+
+body > .layout > .title-wrapper .title {
+    flex-grow: 1;
+}
+
+body > .layout > .title-wrapper .title span {
+    font-size: 21pt;
+    font-weight: 700;
+}
+
+body > .layout .flymenu {
+    align-self: center;
+    grid-area: flymenu;
+    overflow: visible;
+}
+
+body > .layout .content {
+    grid-area: content;
+    overflow: visible;
+    min-height: 73vh;
+}
+
+body > .layout .windowButtons {
+    justify-self: end;
+    align-self: center;
+    grid-area: windowButtons;
+}
+
+body > .layout .flyout {
+    width: 100%;
+    justify-self: center;
+    align-self: center;
+    grid-area: flyout;
+}
+
+.global-wrapper, .layout, .background {
+    border-radius: 16px !important;
+    overflow: hidden;
+}
+
+.global-wrapper {
+    border: 6px solid var(--theme-primaryBgShadow);
+}
